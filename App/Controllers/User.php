@@ -52,7 +52,8 @@ class User extends \Core\Controller
             // validation
 
             $this->register($f);
-            // TODO: Rappeler la fonction de login pour connecter l'utilisateur
+            // DONE: Rappeler la fonction de login pour connecter l'utilisateur
+            $this->login($f);
         }
 
         View::renderTemplate('User/register.html');
@@ -110,6 +111,10 @@ class User extends \Core\Controller
             // TODO: Create a remember me cookie if the user has selected the option
             // to remained logged in on the login form.
             // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
+                // $remember = Utility\Input::post("remember") === "on";
+                // if ($remember and ! self::createRememberCookie($data->id)) {
+                //     throw new Exception('TODO');
+                // }
 
             $_SESSION['user'] = array(
                 'id' => $user['id'],
@@ -120,7 +125,7 @@ class User extends \Core\Controller
 
         } catch (Exception $ex) {
             // TODO : Set flash if error
-            /* Utility\Flash::danger($ex->getMessage());*/
+            Utility\Flash::danger($ex->getMessage());
         }
     }
 
