@@ -52,8 +52,9 @@ class User extends \Core\Controller
             // validation
 
             $this->register($f);
-            // DONE: Rappeler la fonction de login pour connecter l'utilisateur
+            // DONE: Callback the login function to connect the user
             $this->login($f);
+            header('Location: /');
         }
 
         View::renderTemplate('User/register.html');
@@ -125,7 +126,7 @@ class User extends \Core\Controller
 
         } catch (Exception $ex) {
             // TODO : Set flash if error
-            Utility\Flash::danger($ex->getMessage());
+            //Utility\Flash::danger($ex->getMessage());
         }
     }
 
