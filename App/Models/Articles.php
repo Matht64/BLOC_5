@@ -154,7 +154,30 @@ class Articles extends Model {
         $stmt->execute();
     }
 
+    public static function countAll(): int {
+        $db = static::getDB();
+        $stmt = $db->query("SELECT COUNT(*) FROM articles");
+        return $stmt->fetchColumn();
+    }
 
+    public static function getArticlesPerMonth(): array {
+    try {
+        $db = static::getDB();
+
+        $stmt = $db->query("
+            SELECT DATE_FORMAT(published_date, '%Y-%m') AS month, COUNT(*) AS total
+            FROM articles
+            GROUP BY month
+            ORDER BY month DESC
+            LIMIT 6
+        ");
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    } catch (\PDOException $e) {
+        echo "<pre style='color:red;'>ERREUR SQL : " . $e->getMessage() . "</pre>";
+        return [];
+    }
+}
 
 
 }
