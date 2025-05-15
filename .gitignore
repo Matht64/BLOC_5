@@ -58,3 +58,5 @@ composer.lock
 
 /node_modules
 /public/style
+
+App/Config.php
