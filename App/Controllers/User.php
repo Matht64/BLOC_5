@@ -106,10 +106,24 @@ private function login($data) {
             echo "Champs manquants<br>";
             return false;
         }
+private function login($data) {
+    try {
+        echo "Tentative de login...<br>";
+
+        if (!isset($data['email']) || !isset($data['password'])) {
+            echo "Champs manquants<br>";
+            return false;
+        }
 
         echo "Email reçu : " . $data['email'] . "<br>";
         $user = \App\Models\User::getByLogin($data['email']);
+        echo "Email reçu : " . $data['email'] . "<br>";
+        $user = \App\Models\User::getByLogin($data['email']);
 
+        if (!$user) {
+            echo "Utilisateur non trouvé<br>";
+            return false;
+        }
         if (!$user) {
             echo "Utilisateur non trouvé<br>";
             return false;
@@ -132,12 +146,38 @@ private function login($data) {
             'username' => $user['username'],
             'is_admin' => $user['is_admin'],
         ];
+        echo "Utilisateur trouvé :<pre>";
+        print_r($user);
+        echo "</pre>";
+
+        $hashed = Hash::generate($data['password'], $user['salt']);
+        echo "Hash généré : $hashed<br>";
+
+        if ($hashed !== $user['password']) {
+            echo "Mot de passe incorrect<br>";
+            return false;
+        }
+
+        $_SESSION['user'] = [
+            'id' => $user['id'],
+            'username' => $user['username'],
+            'is_admin' => $user['is_admin'],
+        ];
 
         echo "<pre>SESSION : ";
         print_r($_SESSION);
         echo "</pre>";
         return true;
+        echo "<pre>SESSION : ";
+        print_r($_SESSION);
+        echo "</pre>";
+        return true;
 
+    } catch (Exception $ex) {
+        echo "Exception : " . $ex->getMessage();
+        return false;
+    }
+}
     } catch (Exception $ex) {
         echo "Exception : " . $ex->getMessage();
         return false;
@@ -184,6 +224,38 @@ private function login($data) {
 
         return true;
     }
+
+    private function checkAdminAccess(): void
+    {
+        if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin']) || $_SESSION['user']['is_admin'] != 1) {
+            header('Location: /');
+            exit;
+        }
+    }
+
+    public function adminStats()
+    {
+        $this ->checkAdminAccess();
+
+        $userModel = new \App\Models\User();
+        $userCount = $userModel->countAll();
+        $articleCount = Articles::countAll();
+        $articlesPerMonth = Articles::getArticlesPerMonth();
+
+        $stats = [
+            'user_count' => $userCount,
+            'article_count' => $articleCount,
+            'articles_per_month' => $articlesPerMonth
+        ];
+
+        try {
+            View::renderTemplate('User/admin-stats.html', ['stats' => $stats]);
+        } catch (\Throwable $e) {
+            echo "<pre style='color:red;'>TWIG ERROR : " . $e->getMessage() . "</pre>";
+            exit;
+        }
+    }
+
 
     private function checkAdminAccess(): void
     {
