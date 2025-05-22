@@ -23,8 +23,10 @@ class Product extends \Core\Controller
 
             try {
                 $f = $_POST;
-
-                // TODO: Validation
+                // Done: Validation
+                if ($f['title'] == "" or $f['description'] == "" or $f['city'] == "" or $f['picture'] == ""){
+                    throw new \Exception("Empty Fields, fill all the required fields");
+                }
 
                 $f['user_id'] = $_SESSION['user']['id'];
                 $id = Articles::save($f);
