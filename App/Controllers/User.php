@@ -7,6 +7,7 @@ use App\Model\UserRegister;
 use App\Models\Articles;
 use App\Utility\Hash;
 use App\Utility\Session;
+use App\Utility\Input;
 use \Core\View;
 use Exception;
 use http\Env\Request;
@@ -23,7 +24,7 @@ class User extends \Core\Controller
      */
     public function loginAction()
     {
-        if(isset($_POST['submit'])){
+        if (isset($_POST['submit'])) {
             $f = $_POST;
 
             // TODO: Validation
@@ -42,18 +43,19 @@ class User extends \Core\Controller
      */
     public function registerAction()
     {
-        if(isset($_POST['submit'])){
+        if (isset($_POST['submit'])) {
             $f = $_POST;
 
-            if($f['password'] !== $f['password-check']){
+            if ($f['password'] !== $f['password-check']) {
                 // TODO: Gestion d'erreur côté utilisateur
             }
 
             // validation
 
             $this->register($f);
-            // DONE: Rappeler la fonction de login pour connecter l'utilisateur
+            // DONE: Callback the login function to connect the user
             $this->login($f);
+            header('Location: /');
         }
 
         View::renderTemplate('User/register.html');
@@ -96,9 +98,11 @@ class User extends \Core\Controller
         }
     }
 
-    private function login($data){
+    private function login($data)
+    {
         try {
-            if(!isset($data['email'])){
+
+            if (!isset($data['email'])) {
                 throw new Exception('TODO');
             }
 
@@ -108,13 +112,15 @@ class User extends \Core\Controller
                 return false;
             }
 
-            // TODO: Create a remember me cookie if the user has selected the option
+            // DONE: Create a remember me cookie if the user has selected the option
             // to remained logged in on the login form.
             // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
-                // $remember = Utility\Input::post("remember") === "on";
-                // if ($remember and ! self::createRememberCookie($data->id)) {
-                //     throw new Exception('TODO');
-                // }
+
+            // $remember = Input::post("remember") === "on";
+            // if ($remember) {
+            //     // if remember is checked, create a connection cookie for 24h
+            //     setcookie('user_id', $data->id, time() + 60*60*24);
+            // }
 
             $_SESSION['user'] = array(
                 'id' => $user['id'],
@@ -125,9 +131,10 @@ class User extends \Core\Controller
 
         } catch (Exception $ex) {
             // TODO : Set flash if error
-            Utility\Flash::danger($ex->getMessage());
+            //Utility\Flash::danger($ex->getMessage());
         }
     }
+
 
 
     /**
@@ -137,7 +144,8 @@ class User extends \Core\Controller
      * @return boolean
      * @since 1.0.2
      */
-    public function logoutAction() {
+    public function logoutAction()
+    {
 
         /*
         if (isset($_COOKIE[$cookie])){
@@ -150,15 +158,20 @@ class User extends \Core\Controller
 
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
+            setcookie(
+                session_name(),
+                null,
+                time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
             );
         }
 
         session_destroy();
 
-        header ("Location: /");
+        header("Location: /");
 
         return true;
     }
