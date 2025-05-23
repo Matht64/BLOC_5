@@ -1,0 +1,47 @@
+services:
+    database:
+        image: mariadb:10.11
+        environment:
+            MARIADB_USER: ${DATABASE_USER}
+            MARIADB_PASSWORD: ${DATABASE_PASSWORD}
+        ports:
+            - 3306:3306
+        volumes:
+            - ./database:/docker-entrypoint-initdb.d
+        networks:
+            - bloc5-network
+    app:
+        build: .
+        volumes:
+            -   ./:/var/www/html
+            - /var/log/apache2/app:/var/log/apache2
+            - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+        ports:
+            -   40000:80
+        networks:
+            - bloc5-network
+        environment:
+            - DATABASE_HOST=database
+            - DATABASE_NAME=videgrenierenligne
+            - DATABASE_USER=${DATABASE_USER}
+            - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+        depends_on:
+            - database
+    phpmyadmin:
+        image: phpmyadmin:latest
+        environment:
+            - PMA_HOST=database
+            - PMA_PORT=3306
+            - PMA_USER=${PMA_USER}
+            - PMA_PASSWORD=${PMA_PASSWORD}
+            - UPLOAD_LIMIT=300M
+        ports:
+            - 8080:80
+        networks:
+            - bloc5-network
+        depends_on:
+            - database
+
+networks:
+    bloc5-network:
+        driver: bridge

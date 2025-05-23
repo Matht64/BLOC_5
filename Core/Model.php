@@ -3,7 +3,6 @@
 namespace Core;
 
 use PDO;
-use App\Config;
 
 /**
  * Base model
@@ -21,10 +20,10 @@ abstract class Model
     protected static function getDB()
     {
         static $db = null;
-
+        
         if ($db === null) {
-            $dsn = 'mysql:host=' . Config::DB_HOST . ';dbname=' . Config::DB_NAME . ';charset=utf8';
-            $db = new PDO($dsn, Config::DB_USER, Config::DB_PASSWORD);
+            $dsn = 'mysql:host=' . getenv('DATABASE_HOST') . ';dbname=' . getenv('DATABASE_NAME') . ';charset=utf8';
+            $db = new PDO($dsn, getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
 
             // Throw an Exception when an error occurs
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
