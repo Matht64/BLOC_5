@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+    <div class="container mt-30">
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="u-form">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="message">Votre message à {{contacted_username}} concernant {{article}} :</label>
+                                    <textarea class="form-control" name="message" id="message" rows="3" required="true"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="u-area mt-small">
+                            <button type="submit" name="submit" class="btn btn-primary u-btn">Envoyer</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock body %}
