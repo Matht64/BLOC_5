@@ -1,0 +1,6 @@
+projectKey=bloc_5_MV
+serverUrl=http://aaubertenv.ddns.net:3000
+serverVersion=25.5.0.107428
+dashboardUrl=http://aaubertenv.ddns.net:3000/dashboard?id=bloc_5_MV
+ceTaskId=c48a9311-3d05-431b-b12c-5192dbae1d2c
+ceTaskUrl=http://aaubertenv.ddns.net:3000/api/ce/task?id=c48a9311-3d05-431b-b12c-5192dbae1d2c

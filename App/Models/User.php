@@ -52,15 +52,11 @@ class User extends Model {
      * @return string|boolean
      * @throws Exception
      */
-    public static function login() {
+
+    public function countAll(): int {
         $db = static::getDB();
-
-        $stmt = $db->prepare('SELECT * FROM articles WHERE articles.id = ? LIMIT 1');
-
-        $stmt->execute([$id]);
-
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt = $db->query("SELECT COUNT(*) FROM users");
+        return $stmt->fetchColumn();
     }
-
 
 }

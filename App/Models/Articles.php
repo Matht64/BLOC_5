@@ -50,7 +50,7 @@ class Articles extends Model {
         $db = static::getDB();
 
         $stmt = $db->prepare('
-            SELECT * FROM articles
+            SELECT articles.*, users.username FROM articles
             INNER JOIN users ON articles.user_id = users.id
             WHERE articles.id = ? 
             LIMIT 1');
@@ -126,11 +126,13 @@ class Articles extends Model {
     public static function save($data) {
         $db = static::getDB();
 
+        var_dump($data);
+
         $stmt = $db->prepare('INSERT INTO articles(name, description, user_id, published_date) VALUES (:name, :description, :user_id,:published_date)');
 
         $published_date =  new DateTime();
         $published_date = $published_date->format('Y-m-d');
-        $stmt->bindParam(':name', $data['name']);
+        $stmt->bindParam(':name', $data['title']);
         $stmt->bindParam(':description', $data['description']);
         $stmt->bindParam(':published_date', $published_date);
         $stmt->bindParam(':user_id', $data['user_id']);
@@ -152,7 +154,30 @@ class Articles extends Model {
         $stmt->execute();
     }
 
+    public static function countAll(): int {
+        $db = static::getDB();
+        $stmt = $db->query("SELECT COUNT(*) FROM articles");
+        return $stmt->fetchColumn();
+    }
 
+    public static function getArticlesPerMonth(): array {
+    try {
+        $db = static::getDB();
+
+        $stmt = $db->query("
+            SELECT DATE_FORMAT(published_date, '%Y-%m') AS month, COUNT(*) AS total
+            FROM articles
+            GROUP BY month
+            ORDER BY month DESC
+            LIMIT 6
+        ");
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    } catch (\PDOException $e) {
+        echo "<pre style='color:red;'>ERREUR SQL : " . $e->getMessage() . "</pre>";
+        return [];
+    }
+}
 
 
 }

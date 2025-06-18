@@ -18,12 +18,13 @@
                 <div class="overtext">
                     Plus de 15 articles ajoutés quotidiennement
                 </div>
+
             </div>
             <div class="login-window">
                 <div class="l-head">
                     Créer un compte
                 </div>
-                <div class="l-form">
+                <div class="l-form" id="registerForm">
                     <form method="post" action="">
                         <div class="form-group">
                             <label for="username">Nom d'utilisateur</label>
@@ -42,15 +43,15 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword2">Votre mot de passe à nouveau</label>
+                            <div id="passwordError" style="color: red; display: none;">Erreur : différent du mot de passe</div>
                             <input type="password" class="form-control" id="exampleInputPassword2"
                                    placeholder="**********" name="password-check">
                         </div>
                         <div class="row">
-                            <div class="col-lg-7"><button type="submit" name="submit" class="btn btn-cv1">Valider
-                            </button></div>
+                            <div class="col-lg-7"><button type="submit" name="submit" class="btn btn-cv1">Valider</button></div>
                             <div class="hidden-xs">
                                 <div class="col-lg-1 ortext">ou</div>
-                                <div class="col-lg-4 signuptext"><a href="login.html">Connexion</a></div>
+                                <div class="col-lg-4 signuptext"><a href="login">Connexion</a></div>
                             </div>
                         </div>
                         <div class="visible-xs text-center mt-30">
@@ -62,4 +63,20 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        var password = document.getElementById('exampleInputPassword1').value;
+        var confirmPassword = document.getElementById('exampleInputPassword2').value;
+        var passwordError = document.getElementById('passwordError');
+
+        if (password !== confirmPassword) {
+            passwordError.style.display = 'block';
+            event.preventDefault(); 
+        } else {
+            passwordError.style.display = 'none';
+        }
+    });
+    </script>
 {% endblock %}
