@@ -4,8 +4,7 @@ services:
         environment:
             MARIADB_USER: ${DATABASE_USER}
             MARIADB_PASSWORD: ${DATABASE_PASSWORD}
-        ports:
-            - 3306:3306
+            MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
         volumes:
             - ./database:/docker-entrypoint-initdb.d
         networks:
@@ -13,7 +12,8 @@ services:
     app:
         build: .
         volumes:
-            -   ./:/var/www/html
+            - ./:/var/www/html
+            - /var/www/html/vendor
             - /var/log/apache2/app:/var/log/apache2
             - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
         ports:
@@ -32,11 +32,11 @@ services:
         environment:
             - PMA_HOST=database
             - PMA_PORT=3306
-            - PMA_USER=${PMA_USER}
-            - PMA_PASSWORD=${PMA_PASSWORD}
+            - PMA_USER=root
+            - PMA_PASSWORD=${MARIADB_ROOT_PASSWORD}
             - UPLOAD_LIMIT=300M
         ports:
-            - 8080:80
+            - 2025:80
         networks:
             - bloc5-network
         depends_on:
