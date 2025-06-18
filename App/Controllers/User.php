@@ -7,7 +7,6 @@ use App\Model\UserRegister;
 use App\Models\Articles;
 use App\Utility\Hash;
 use App\Utility\Session;
-use App\Utility\Input;
 use \Core\View;
 use Exception;
 use http\Env\Request;
@@ -24,7 +23,7 @@ class User extends \Core\Controller
      */
     public function loginAction()
     {
-        if (isset($_POST['submit'])) {
+        if(isset($_POST['submit'])){
             $f = $_POST;
 
             // TODO: Validation
@@ -37,76 +36,39 @@ class User extends \Core\Controller
 
         View::renderTemplate('User/login.html');
     }
-    private function login($data)
-    {
-        try {
-            echo "Tentative de login...<br>";
 
-            if (!isset($data['email']) || !isset($data['password'])) {
-                echo "Champs manquants<br>";
-                return false;
-            }
-
-            echo "Email reçu : " . $data['email'] . "<br>";
-            $user = \App\Models\User::getByLogin($data['email']);
-
-            if (!$user) {
-                echo "Utilisateur non trouvé<br>";
-                return false;
-            }
-
-            echo "Utilisateur trouvé :<pre>";
-            print_r($user);
-            echo "</pre>";
-
-            $hashed = Hash::generate($data['password'], $user['salt']);
-            echo "Hash généré : $hashed<br>";
-
-            if ($hashed !== $user['password']) {
-                echo "Mot de passe incorrect<br>";
-                return false;
-            }
-
-            $_SESSION['user'] = [
-                'id' => $user['id'],
-                'username' => $user['username'],
-                'is_admin' => $user['is_admin'],
-            ];
-
-            echo "<pre>SESSION : ";
-            print_r($_SESSION);
-            echo "</pre>";
-            return true;
-
-        } catch (Exception $ex) {
-            echo "Exception : " . $ex->getMessage();
-            return false;
-        }
-    }
-
-    
     /**
      * Page de création de compte
      */
     public function registerAction()
     {
-        if (isset($_POST['submit'])) {
+        if(isset($_POST['submit'])){
             $f = $_POST;
 
-            // validation
-            if ($f['password'] == $f['password-check']) {
-                $this->register($f);
-                // DONE: Callback the login function to connect the user
-                $this->login($f);
-                header('Location: /');
-                // DONE: Gestion d'erreur côté utilisateur
+            if($f['password'] !== $f['password-check']){
+                // TODO: Gestion d'erreur côté utilisateur
             }
-            throw new Exception('Les mots de passe ne correspondent pas.');          
+
+            // validation
+
+            $this->register($f);
+            // TODO: Rappeler la fonction de login pour connecter l'utilisateur
         }
 
         View::renderTemplate('User/register.html');
     }
 
+    /**
+     * Affiche la page du compte
+     */
+    public function accountAction()
+    {
+        $articles = Articles::getByUser($_SESSION['user']['id']);
+
+        View::renderTemplate('User/account.html', [
+            'articles' => $articles
+        ]);
+    }
 
     /*
      * Fonction privée pour enregister un utilisateur
@@ -133,17 +95,33 @@ class User extends \Core\Controller
         }
     }
 
+    private function login($data){
+        try {
+            if(!isset($data['email'])){
+                throw new Exception('TODO');
+            }
 
-    /**
-     * Affiche la page du compte
-     */
-    public function accountAction()
-    {
-        $articles = Articles::getByUser($_SESSION['user']['id']);
+            $user = \App\Models\User::getByLogin($data['email']);
 
-        View::renderTemplate('User/account.html', [
-            'articles' => $articles
-        ]);
+            if (Hash::generate($data['password'], $user['salt']) !== $user['password']) {
+                return false;
+            }
+
+            // TODO: Create a remember me cookie if the user has selected the option
+            // to remained logged in on the login form.
+            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
+
+            $_SESSION['user'] = array(
+                'id' => $user['id'],
+                'username' => $user['username'],
+            );
+
+            return true;
+
+        } catch (Exception $ex) {
+            // TODO : Set flash if error
+            /* Utility\Flash::danger($ex->getMessage());*/
+        }
     }
 
 
@@ -154,8 +132,7 @@ class User extends \Core\Controller
      * @return boolean
      * @since 1.0.2
      */
-    public function logoutAction()
-    {
+    public function logoutAction() {
 
         /*
         if (isset($_COOKIE[$cookie])){
@@ -168,52 +145,17 @@ class User extends \Core\Controller
 
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
-            setcookie(
-                session_name(),
-                null,
-                time() - 42000,
-                $params["path"],
-                $params["domain"],
-                $params["secure"],
-                $params["httponly"]
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
             );
         }
 
-        header("Location: /");
         session_destroy();
 
-        exit;
-    }
+        header ("Location: /");
 
-    private function checkAdminAccess(): void
-    {
-        if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin']) || $_SESSION['user']['is_admin'] != 1) {
-            header('Location: /');
-            exit;
-        }
-    }
-
-    public function adminStats()
-    {
-        $this->checkAdminAccess();
-
-        $userModel = new \App\Models\User();
-        $userCount = $userModel->countAll();
-        $articleCount = Articles::countAll();
-        $articlesPerMonth = Articles::getArticlesPerMonth();
-
-        $stats = [
-            'user_count' => $userCount,
-            'article_count' => $articleCount,
-            'articles_per_month' => $articlesPerMonth
-        ];
-
-        try {
-            View::renderTemplate('User/admin-stats.html', ['stats' => $stats]);
-        } catch (\Throwable $e) {
-            echo "<pre style='color:red;'>TWIG ERROR : " . $e->getMessage() . "</pre>";
-            exit;
-        }
+        return true;
     }
 
 }
