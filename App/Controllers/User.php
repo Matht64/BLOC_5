@@ -93,16 +93,15 @@ class User extends \Core\Controller
         if (isset($_POST['submit'])) {
             $f = $_POST;
 
-            if ($f['password'] !== $f['password-check']) {
-                // TODO: Gestion d'erreur côté utilisateur
-            }
-
             // validation
-
-            $this->register($f);
-            // DONE: Callback the login function to connect the user
-            $this->login($f);
-            header('Location: /');
+            if ($f['password'] == $f['password-check']) {
+                $this->register($f);
+                // DONE: Callback the login function to connect the user
+                $this->login($f);
+                header('Location: /');
+                // DONE: Gestion d'erreur côté utilisateur
+            }
+            throw new Exception('Les mots de passe ne correspondent pas.');          
         }
 
         View::renderTemplate('User/register.html');
@@ -180,11 +179,10 @@ class User extends \Core\Controller
             );
         }
 
+        header("Location: /");
         session_destroy();
 
-        header("Location: /");
-
-        return true;
+        exit;
     }
 
     private function checkAdminAccess(): void
