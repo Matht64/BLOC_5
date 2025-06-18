@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "sass style/:public/style",
     "watch": "sass -w style/:public/style",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
