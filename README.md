@@ -2,16 +2,12 @@
 
 Ce Readme.md est à destination des futurs repreneurs du site-web Vide Grenier en Ligne.
 
-## Mise en place du projet back-end
+## Mise en place du projet
+- Créer un fichier `.env` à la racine du projet, en vous basant sur le fichier `.env.example`.
+- lancer le script `./startcontainer.sh <env>` pour démarrer le conteneur Docker.
 
-1. Créez un VirtualHost pointant vers le dossier /public du site web (Apache)
-2. Importez la base de données MySQL (sql/import.sql)
-3. Connectez le projet et la base de données via les fichiers de configuration
-4. Lancez la commande `composer install` pour les dépendances
-
-## Mise en place du projet front-end
-1. Lancez la commande `npm install` pour installer node-sass
-2. Lancez la commande `npm run watch` pour compiler les fichiers SCSS
+## Déployer l'application en production
+- Lancer le script `./deploytoprod.sh` puis lancer le projet avec le script `./startcontainer.sh prod`.
 
 ## Routing
 
