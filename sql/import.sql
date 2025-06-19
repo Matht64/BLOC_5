@@ -33,6 +33,9 @@ CREATE TABLE `articles` (
   `picture` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+GRANT ALL PRIVILEGES ON `videgrenierenligne`.* TO 'videgrenierenligne'@'%';
+FLUSH PRIVILEGES;
+
 --
 -- Dumping data for table `articles`
 --
