@@ -20,4 +20,4 @@ fi
 echo "Application removed successfully in $ENVIRONMENT environment."
 
 # Restart the application with the specified environment
-./start.sh $ENVIRONMENT
+./startcontainer.sh $ENVIRONMENT
