@@ -1,0 +1,19 @@
+services:
+    database:
+        volumes:
+            - database:/var/lib/mysql
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: prod
+        ports:
+            -   40001:80
+    phpmyadmin:
+        ports:
+            - 2026:80
+        depends_on:
+            - database
+volumes:
+    database:
+        driver: local

@@ -1,0 +1,21 @@
+services:
+    database:
+        volumes:
+            - database:/var/lib/mysql
+    app:
+        image: localhost:5000/videgrenierenligne:latest
+        volumes:
+            - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+        ports:
+            -   40002:80
+        depends_on:
+            - database
+    phpmyadmin:
+        ports:
+            - 2027:80
+        depends_on:
+            - database
+
+volumes:
+    database:
+        driver: local
