@@ -1,17 +1,18 @@
 FROM php:8.2-apache
 
 RUN apt-get update && apt-get install -y \
-    unzip \
     zlib1g-dev \
-    libwebp-dev \
     libpng-dev \
     libzip-dev \
+    unzip \
+    libwebp-dev \
     libicu-dev \
     default-mysql-client \
     git \
     nodejs \
-    npm \
-    && docker-php-ext-install \
+    npm
+
+RUN docker-php-ext-install \
         gd \
         zip \
         intl \
@@ -28,9 +29,6 @@ RUN git config --global --add safe.directory /var/www/html
 WORKDIR /var/www/html
 
 COPY composer.json composer.lock* package.json package-lock.json* ./
-
-RUN composer install --no-dev --no-scripts --optimize-autoloader \
-    && npm install --no-audit --no-fund --omit=dev
 
 COPY . .
 

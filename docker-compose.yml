@@ -6,15 +6,13 @@ services:
             MARIADB_PASSWORD: ${DATABASE_PASSWORD}
             MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
         volumes:
-            - ./database:/docker-entrypoint-initdb.d
+            - ./database:/var/lib/mysql
         networks:
             - bloc5-network
     app:
         build: .
         volumes:
             - ./:/var/www/html
-            - /var/www/html/vendor
-            - /var/log/apache2/app:/var/log/apache2
             - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
         ports:
             -   40000:80
@@ -25,6 +23,10 @@ services:
             - DATABASE_NAME=videgrenierenligne
             - DATABASE_USER=${DATABASE_USER}
             - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+        command: sh -c "composer install --no-dev --no-scripts --optimize-autoloader \
+                        && npm install --no-audit --no-fund --omit=dev \
+                        && npm run build \
+                        && apache2-foreground"
         depends_on:
             - database
     phpmyadmin:
