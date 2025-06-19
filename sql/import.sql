@@ -14,6 +14,9 @@ SET time_zone = "+00:00";
 -- Database: `videgrenierenligne`
 --
 
+CREATE DATABASE IF NOT EXISTS videgrenierenligne;
+USE videgrenierenligne;
+
 -- --------------------------------------------------------
 
 --

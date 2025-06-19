@@ -6,32 +6,26 @@ services:
             MARIADB_PASSWORD: ${DATABASE_PASSWORD}
             MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
         volumes:
-            - database-dev:/var/lib/mysql
+            - database-pre-prod:/var/lib/mysql
             - ./sql/import.sql:/docker-entrypoint-initdb.d/import.sql
         networks:
-            - bloc5-dev-network
+            - bloc5-pre-prod-network
     app:
         build:
             context: .
             dockerfile: Dockerfile
-            target: dev
+            target: prod
         volumes:
-            - ./:/var/www/html
-            - /var/www/html/vendor
-            - /var/www/html/node_modules
-            - /var/www/html/public/style
             - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
         ports:
-            -   40000:80
+            -   40001:80
         networks:
-            - bloc5-dev-network
+            - bloc5-pre-prod-network
         environment:
             - DATABASE_HOST=database
             - DATABASE_NAME=videgrenierenligne
             - DATABASE_USER=${DATABASE_USER}
             - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-        command: sh -c "npm run build \
-            && apache2-foreground"
         depends_on:
             - database
     phpmyadmin:
@@ -43,16 +37,15 @@ services:
             - PMA_PASSWORD=${MARIADB_ROOT_PASSWORD}
             - UPLOAD_LIMIT=300M
         ports:
-            - 2025:80
+            - 2026:80
         networks:
-            - bloc5-dev-network
+            - bloc5-pre-prod-network
         depends_on:
             - database
-
 networks:
-    bloc5-dev-network:
+    bloc5-pre-prod-network:
         driver: bridge
 
 volumes:
-    database-dev:
+    database-pre-prod:
         driver: local
