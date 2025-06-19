@@ -4,7 +4,7 @@ services:
             - database:/var/lib/mysql
     app:
         build:
-            context: .
+            context: https://github.com/Matht64/BLOC_5.git#stage
             dockerfile: Dockerfile
             target: prod
         ports:

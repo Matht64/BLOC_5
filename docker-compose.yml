@@ -17,6 +17,8 @@ services:
             - DATABASE_NAME=videgrenierenligne
             - DATABASE_USER=${DATABASE_USER}
             - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+        volumes:
+            - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
         depends_on:
             - database
     phpmyadmin:
