@@ -3,7 +3,7 @@ services:
         volumes:
             - database:/var/lib/mysql
     app:
-        image: localhost:5000/videgrenierenligne:latest
+        image: https://github.com/Matht64/BLOC_5.git#main
         ports:
             -   40002:80
         depends_on:
