@@ -1,0 +1,18 @@
+services:
+    database:
+        volumes:
+            - database:/var/lib/mysql
+    app:
+        image: https://github.com/Matht64/BLOC_5.git#main
+        ports:
+            -   40002:80
+        depends_on:
+            - database
+    phpmyadmin:
+        ports:
+            - 2027:80
+        depends_on:
+            - database
+volumes:
+    database:
+        driver: local
