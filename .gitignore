@@ -57,8 +57,9 @@ composer.lock
 
 /.env
 
-
 /node_modules
 /public/style
+
+/database
 
 App/Config.php
