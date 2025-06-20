@@ -19,7 +19,7 @@ services:
             - DATABASE_PASSWORD=${DATABASE_PASSWORD}
         configs:
             - source: apache_conf
-              targer: ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+              target: ./000-default.conf:/etc/apache2/sites-available/000-default.conf
         depends_on:
             - database
     phpmyadmin:
