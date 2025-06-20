@@ -3,7 +3,7 @@ services:
         volumes:
             - database:/var/lib/mysql
     app:
-        image: https://github.com/Matht64/BLOC_5.git#main
+        image: https://github.com/Matht64/bloc_5.git#main
         ports:
             -   40002:80
         depends_on:
