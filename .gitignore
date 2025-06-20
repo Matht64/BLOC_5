@@ -55,6 +55,11 @@ composer.lock
 # Embedded web-server pid file
 /.web-server-pid
 
+/.env
 
 /node_modules
 /public/style
+
+/database
+
+App/Config.php

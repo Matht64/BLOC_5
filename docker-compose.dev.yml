@@ -1,0 +1,25 @@
+services:
+    database:
+        volumes:
+            - database:/var/lib/mysql
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: dev
+        volumes:
+            - ./:/var/www/html
+            - /var/www/html/vendor
+            - /var/www/html/node_modules
+            - /var/www/html/public/style
+        ports:
+            -   40000:80
+        command: sh -c "npm run build \
+            && apache2-foreground"
+    phpmyadmin:
+        ports:
+            - 2025:80
+
+volumes:
+    database:
+        driver: local

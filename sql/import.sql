@@ -14,6 +14,9 @@ SET time_zone = "+00:00";
 -- Database: `videgrenierenligne`
 --
 
+CREATE DATABASE IF NOT EXISTS videgrenierenligne;
+USE videgrenierenligne;
+
 -- --------------------------------------------------------
 
 --
@@ -29,6 +32,9 @@ CREATE TABLE `articles` (
   `views` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `picture` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+GRANT ALL PRIVILEGES ON `videgrenierenligne`.* TO 'videgrenierenligne'@'%';
+FLUSH PRIVILEGES;
 
 --
 -- Dumping data for table `articles`

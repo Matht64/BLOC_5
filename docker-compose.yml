@@ -1,0 +1,39 @@
+services:
+    database:
+        image: mariadb:10.11
+        environment:
+            MARIADB_USER: ${DATABASE_USER}
+            MARIADB_PASSWORD: ${DATABASE_PASSWORD}
+            MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+        volumes:
+            - ./sql/import.sql:/docker-entrypoint-initdb.d/import.sql
+        networks:
+            - videgrenierenligne
+    app:
+        networks:
+            - videgrenierenligne
+        environment:
+            - DATABASE_HOST=database
+            - DATABASE_NAME=videgrenierenligne
+            - DATABASE_USER=${DATABASE_USER}
+            - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+        volumes:
+            - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+        depends_on:
+            - database
+    phpmyadmin:
+        image: phpmyadmin:latest
+        environment:
+            - PMA_HOST=database
+            - PMA_PORT=3306
+            - PMA_USER=root
+            - PMA_PASSWORD=${MARIADB_ROOT_PASSWORD}
+            - UPLOAD_LIMIT=300M
+        networks:
+            - videgrenierenligne
+        depends_on:
+            - database
+
+networks:
+    videgrenierenligne:
+        driver: bridge
