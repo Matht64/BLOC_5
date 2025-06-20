@@ -17,8 +17,9 @@ services:
             - DATABASE_NAME=videgrenierenligne
             - DATABASE_USER=${DATABASE_USER}
             - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-        volumes:
-            - ./000-default.conf:/etc/apache2/sites-available/000-default.conf
+        configs:
+            - source: apache_conf
+              targer: ./000-default.conf:/etc/apache2/sites-available/000-default.conf
         depends_on:
             - database
     phpmyadmin:
@@ -37,3 +38,6 @@ services:
 networks:
     videgrenierenligne:
         driver: bridge
+configs:
+  apache_conf:
+    file: ./000-default.conf
