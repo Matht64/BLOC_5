@@ -6,8 +6,6 @@ use App\Config;
 use App\Model\UserRegister;
 use App\Models\Articles;
 use App\Utility\Hash;
-use App\Utility\Session;
-use App\Utility\Input;
 use \Core\View;
 use Exception;
 use http\Env\Request;
@@ -27,12 +25,12 @@ class User extends \Core\Controller
         if (isset($_POST['submit'])) {
             $f = $_POST;
 
-            // TODO: Validation
-
-            $this->login($f);
-
+            // D: Validation
+            if ($this->login($f)){
+                header('Location: /account');
+            }
             // Si login OK, redirige vers le compte
-            header('Location: /account');
+            
         }
 
         View::renderTemplate('User/login.html');

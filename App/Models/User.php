@@ -32,7 +32,8 @@ class User extends Model {
     }
 
     public static function getByLogin($login)
-    {
+    {   
+        echo "\nDB called \n";
         $db = static::getDB();
 
         $stmt = $db->prepare("
