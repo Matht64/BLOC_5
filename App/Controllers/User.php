@@ -37,6 +37,44 @@ class User extends \Core\Controller
         View::renderTemplate('User/login.html');
     }
 
+    private function login($data)
+    {
+        try {
+
+            if (!isset($data['email']) || !isset($data['password'])) {
+                echo "Champs manquants<br>";
+                return false;
+            }
+
+            $user = \App\Models\User::getByLogin($data['email']);
+
+            if (!$user) {
+                echo "Utilisateur non trouvé<br>";
+                return false;
+            }
+
+            $hashed = Hash::generate($data['password'], $user['salt']);
+
+            if ($hashed !== $user['password']) {
+                echo "Mot de passe incorrect<br>";
+                return false;
+            }
+
+            $_SESSION['user'] = [
+                'id' => $user['id'],
+                'username' => $user['username'],
+                'is_admin' => $user['is_admin'],
+            ];
+
+            echo "</pre>";
+            return true;
+
+        } catch (Exception $ex) {
+            echo "Exception : " . $ex->getMessage();
+            return false;
+        }
+    }
+
     /**
      * Page de création de compte
      */
@@ -45,14 +83,15 @@ class User extends \Core\Controller
         if(isset($_POST['submit'])){
             $f = $_POST;
 
-            if($f['password'] !== $f['password-check']){
-                // TODO: Gestion d'erreur côté utilisateur
-            }
-
             // validation
-
-            $this->register($f);
-            // TODO: Rappeler la fonction de login pour connecter l'utilisateur
+            if ($f['password'] == $f['password-check']) {
+                $this->register($f);
+                // DONE: Callback the login function to connect the user
+                $this->login($f);
+                header('Location: /');
+                // DONE: Gestion d'erreur côté utilisateur
+            }
+            throw new Exception('Les mots de passe ne correspondent pas.');
         }
 
         View::renderTemplate('User/register.html');
@@ -94,7 +133,7 @@ class User extends \Core\Controller
             /* Utility\Flash::danger($ex->getMessage());*/
         }
     }
-
+  
     private function login($data){
         try {
             if(!isset($data['email'])){
@@ -124,7 +163,6 @@ class User extends \Core\Controller
         }
     }
 
-
     /**
      * Logout: Delete cookie and session. Returns true if everything is okay,
      * otherwise turns false.
@@ -151,11 +189,40 @@ class User extends \Core\Controller
             );
         }
 
+        header("Location: /");
         session_destroy();
 
-        header ("Location: /");
-
-        return true;
+        exit;
     }
 
+    private function checkAdminAccess(): void
+    {
+        if (!isset($_SESSION['user']) || empty($_SESSION['user']['is_admin']) || $_SESSION['user']['is_admin'] != 1) {
+            header('Location: /');
+            exit;
+        }
+    }
+
+    public function adminStats()
+    {
+        $this->checkAdminAccess();
+
+        $userModel = new \App\Models\User();
+        $userCount = $userModel->countAll();
+        $articleCount = Articles::countAll();
+        $articlesPerMonth = Articles::getArticlesPerMonth();
+
+        $stats = [
+            'user_count' => $userCount,
+            'article_count' => $articleCount,
+            'articles_per_month' => $articlesPerMonth
+        ];
+
+        try {
+            View::renderTemplate('User/admin-stats.html', ['stats' => $stats]);
+        } catch (\Throwable $e) {
+            echo "<pre style='color:red;'>TWIG ERROR : " . $e->getMessage() . "</pre>";
+            exit;
+        }
+    }
 }
