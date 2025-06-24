@@ -3,63 +3,114 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-<div class="container-fluid bg-image">
-    <div class="row">
-        <div class="login-wraper">
-            <div class="hidden-xs">
-                <img src="images/login.jpg" alt="">
-            </div>
-            <div class="banner-text hidden-xs">
-                <div class="line"></div>
-                <div class="b-text">
-                    Des <span class="color-active">centaines<br> </span> <span class="color-b1">d'articles vous
-                </span>attendent
-                </div>
-                <div class="overtext">
-                    Plus de 15 articles ajoutés quotidiennement
-                </div>
-            </div>
-            <div class="login-window">
-                <div class="l-head">
-                    Créer un compte
-                </div>
-                <div class="l-form">
-                    <form method="post" action="">
-                        <div class="form-group">
-                            <label for="username">Nom d'utilisateur</label>
-                            <input type="text" class="form-control" id="username" name="username"
-                                   placeholder="John Doe">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Email</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" name="email"
-                                   placeholder="exemple@gmail.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Mot de passe</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1"
-                                   placeholder="**********" name="password">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword2">Votre mot de passe à nouveau</label>
-                            <input type="password" class="form-control" id="exampleInputPassword2"
-                                   placeholder="**********" name="password-check">
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-7"><button type="submit" name="submit" class="btn btn-cv1">Valider
-                            </button></div>
-                            <div class="hidden-xs">
-                                <div class="col-lg-1 ortext">ou</div>
-                                <div class="col-lg-4 signuptext"><a href="login">Connexion</a></div>
-                            </div>
-                        </div>
-                        <div class="visible-xs text-center mt-30">
-                            <span class="signuptext"><a href="/login">Se connecter</a></span>
-                        </div>
-                    </form>
-                </div>
-            </div>
+
+<style>
+  @media (min-width: 768px) {
+    .login-wrapper {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    .login-wrapper .image-col {
+      flex: 1;
+      display: block;
+      background: url('/images/login.jpg') center/cover no-repeat;
+      min-height: 100%;
+      position: relative;
+    }
+
+    .login-wrapper .form-col {
+      flex: 1;
+      padding: 3rem;
+    }
+
+    .banner-text {
+      position: absolute;
+      top: 20%;
+      left: 10%;
+      z-index: 2;
+      color: white;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .login-wrapper {
+      display: block;
+      box-shadow: none;
+      border-radius: 0;
+    }
+
+    .image-col {
+      display: none !important;
+    }
+
+    .form-col {
+      padding: 2rem 1rem;
+    }
+
+    .btn-cv1 {
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="container-fluid bg-image py-5">
+  <div class="login-wrapper">
+
+    <!-- Image (cachée sur mobile) -->
+    <div class="image-col d-none d-md-block">
+      <div class="banner-text">
+        <div class="line mb-2"></div>
+        <h4 class="b-text">
+          Des <span class="color-active">centaines<br></span>
+          <span class="color-b1">d'articles vous</span> attendent
+        </h4>
+        <div class="overtext mt-3">
+          Plus de 15 articles ajoutés quotidiennement
         </div>
+      </div>
     </div>
+
+    <!-- Formulaire -->
+    <div class="form-col">
+      <h3 class="mb-4 text-center">Créer un compte</h3>
+
+      <form method="post" action="">
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur</label>
+          <input type="text" id="username" name="username" class="form-control" placeholder="John Doe" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="exemple@gmail.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="**********" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password-check">Votre mot de passe à nouveau</label>
+          <input type="password" id="password-check" name="password-check" class="form-control" placeholder="**********" required>
+        </div>
+
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-3">
+          <button type="submit" name="submit" class="btn btn-cv1 mb-2 mb-md-0">Valider</button>
+          <span class="mx-md-3 d-none d-md-block">ou</span>
+          <a href="/login" class="btn btn-link">Connexion</a>
+        </div>
+
+        <div class="text-center d-md-none">
+          <a href="/login" class="text-muted">Se connecter</a>
+        </div>
+      </form>
+    </div>
+
+  </div>
 </div>
 {% endblock %}
