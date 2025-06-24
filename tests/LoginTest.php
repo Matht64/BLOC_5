@@ -41,12 +41,9 @@ class LoginTest extends TestCase
                  ->with($data['email'])
                  ->willReturn(null);
 
-        try {
-            $result = $this->invokeMethod($this->fakeUser, 'login', [$data]);
-            $this->assertFalse($result);
-        } catch (Exception $e) {
-            $this->fail('Une erreur a été levée alors qu\'on attendait false');
-        }
+        $result = $this->invokeMethod($this->fakeUser, 'login', [$data]);
+
+        $this->assertFalse($result);
     }
 
     public function testLoginWithIncorrectPassword()
@@ -105,7 +102,6 @@ class LoginTest extends TestCase
         $result = $this->invokeMethod($this->fakeUser, 'login', [$data]);
 
         $this->assertTrue($result);
-        // $this->assertArrayHasKey('user', $_SESSION);
     }
 
     /**

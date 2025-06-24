@@ -38,30 +38,20 @@ class User extends \Core\Controller
     private function login($data)
     {
         try {
-            echo "Tentative de login...<br>";
-
             if (!isset($data['email']) || !isset($data['password'])) {
-                echo "Champs manquants<br>";
                 return false;
             }
 
-            echo "Email reçu : " . $data['email'] . "<br>";
             $user = \App\Models\User::getByLogin($data['email']);
 
             if (!$user) {
-                echo "Utilisateur non trouvé<br>";
                 return false;
             }
-
-            echo "Utilisateur trouvé :<pre>";
-            print_r($user);
-            echo "</pre>";
 
             $hashed = Hash::generate($data['password'], $user['salt']);
             echo "Hash généré : $hashed<br>";
 
             if ($hashed !== $user['password']) {
-                echo "Mot de passe incorrect<br>";
                 return false;
             }
 
@@ -71,14 +61,10 @@ class User extends \Core\Controller
                 'is_admin' => $user['is_admin'],
             ];
 
-            echo "<pre>SESSION : ";
-            print_r($_SESSION);
-            echo "</pre>";
             return true;
 
         } catch (Exception $ex) {
             echo "Exception : " . $ex->getMessage();
-            return false;
         }
     }
 
