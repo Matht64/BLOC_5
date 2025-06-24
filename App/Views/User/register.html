@@ -3,7 +3,6 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-
 <style>
   @media (min-width: 768px) {
     .login-wrapper {
@@ -113,20 +112,4 @@
 
   </div>
 </div>
-{% endblock %}
-{% block javascript %}
-    <script>
-    document.getElementById('registerForm').addEventListener('submit', function(event) {
-        var password = document.getElementById('exampleInputPassword1').value;
-        var confirmPassword = document.getElementById('exampleInputPassword2').value;
-        var passwordError = document.getElementById('passwordError');
-
-        if (password !== confirmPassword) {
-            passwordError.style.display = 'block';
-            event.preventDefault(); 
-        } else {
-            passwordError.style.display = 'none';
-        }
-    });
-    </script>
 {% endblock %}

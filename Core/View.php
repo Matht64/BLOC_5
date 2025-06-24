@@ -39,27 +39,20 @@ class View
      *
      * @return void
      */
-public static function renderTemplate($template, $args = [])
-{
-    static $twig = null;
+    public static function renderTemplate($template, $args = [])
+    {
+        static $twig = null;
 
-    if ($twig === null) {
-        $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . '/App/Views');
-        $twig = new \Twig\Environment($loader, [
-            'debug' => true,
-            'strict_variables' => true,
-            'auto_reload' => true,
-        ]);
-        $twig->addExtension(new \Twig\Extension\DebugExtension());
-    }
+        if ($twig === null) {
+            $loader = new \Twig\Loader\Filesystemloader(dirname(__DIR__) . '/App/Views');
+            $twig = new \Twig\Environment($loader, ['debug' => true,]);
+            $twig->addExtension(new \Twig\Extension\DebugExtension());
+        }
 
-    try {
         echo $twig->render($template, View::setDefaultVariables($args));
-    } catch (\Throwable $e) {
-        echo "<pre style='color:red; font-weight: bold;'>TWIG ERROR : " . $e->getMessage() . "</pre>";
-        exit;
     }
-}
+
+
 
     /**
      * Ajoute les données à fournir à toutes les pages
