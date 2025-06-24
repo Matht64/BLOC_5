@@ -4,9 +4,9 @@ services:
             - database:/var/lib/mysql
     app:
         build:
-            context: .
-            additional_contexts:
-                source: https://github.com/Matht64/bloc_5.git#main
+            context: https://github.com/Matht64/BLOC_5.git#main
+            dockerfile: Dockerfile
+            target: prod
         ports:
             -   40002:80
         depends_on:
