@@ -3,7 +3,10 @@ services:
         volumes:
             - database:/var/lib/mysql
     app:
-        image: https://github.com/Matht64/BLOC_5.git#main
+        build:
+            context: https://github.com/Matht64/BLOC_5.git#main
+            dockerfile: Dockerfile
+            target: prod
         ports:
             -   40002:80
         depends_on:
