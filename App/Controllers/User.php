@@ -7,7 +7,6 @@ use App\Model\UserRegister;
 use App\Models\Articles;
 use App\Utility\Hash;
 use App\Utility\Session;
-use App\Utility\Input;
 use \Core\View;
 use Exception;
 use http\Env\Request;
@@ -24,7 +23,7 @@ class User extends \Core\Controller
      */
     public function loginAction()
     {
-        if (isset($_POST['submit'])) {
+        if(isset($_POST['submit'])){
             $f = $_POST;
 
             // TODO: Validation
@@ -37,6 +36,7 @@ class User extends \Core\Controller
 
         View::renderTemplate('User/login.html');
     }
+
     private function login($data)
     {
         try {
@@ -75,13 +75,12 @@ class User extends \Core\Controller
         }
     }
 
-    
     /**
      * Page de création de compte
      */
     public function registerAction()
     {
-        if (isset($_POST['submit'])) {
+        if(isset($_POST['submit'])){
             $f = $_POST;
 
             // validation
@@ -92,12 +91,23 @@ class User extends \Core\Controller
                 header('Location: /');
                 // DONE: Gestion d'erreur côté utilisateur
             }
-            throw new Exception('Les mots de passe ne correspondent pas.');          
+            throw new Exception('Les mots de passe ne correspondent pas.');
         }
 
         View::renderTemplate('User/register.html');
     }
 
+    /**
+     * Affiche la page du compte
+     */
+    public function accountAction()
+    {
+        $articles = Articles::getByUser($_SESSION['user']['id']);
+
+        View::renderTemplate('User/account.html', [
+            'articles' => $articles
+        ]);
+    }
 
     /*
      * Fonction privée pour enregister un utilisateur
@@ -123,17 +133,34 @@ class User extends \Core\Controller
             /* Utility\Flash::danger($ex->getMessage());*/
         }
     }
+  
+    private function login($data){
+        try {
+            if(!isset($data['email'])){
+                throw new Exception('TODO');
+            }
 
-    /**
-     * Affiche la page du compte
-     */
-    public function accountAction()
-    {
-        $articles = Articles::getByUser($_SESSION['user']['id']);
+            $user = \App\Models\User::getByLogin($data['email']);
 
-        View::renderTemplate('User/account.html', [
-            'articles' => $articles
-        ]);
+            if (Hash::generate($data['password'], $user['salt']) !== $user['password']) {
+                return false;
+            }
+
+            // TODO: Create a remember me cookie if the user has selected the option
+            // to remained logged in on the login form.
+            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
+
+            $_SESSION['user'] = array(
+                'id' => $user['id'],
+                'username' => $user['username'],
+            );
+
+            return true;
+
+        } catch (Exception $ex) {
+            // TODO : Set flash if error
+            /* Utility\Flash::danger($ex->getMessage());*/
+        }
     }
 
     /**
@@ -143,8 +170,7 @@ class User extends \Core\Controller
      * @return boolean
      * @since 1.0.2
      */
-    public function logoutAction()
-    {
+    public function logoutAction() {
 
         /*
         if (isset($_COOKIE[$cookie])){
@@ -157,14 +183,9 @@ class User extends \Core\Controller
 
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
-            setcookie(
-                session_name(),
-                null,
-                time() - 42000,
-                $params["path"],
-                $params["domain"],
-                $params["secure"],
-                $params["httponly"]
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
             );
         }
 
