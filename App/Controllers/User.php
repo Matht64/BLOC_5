@@ -133,35 +133,6 @@ class User extends \Core\Controller
             /* Utility\Flash::danger($ex->getMessage());*/
         }
     }
-  
-    private function login($data){
-        try {
-            if(!isset($data['email'])){
-                throw new Exception('TODO');
-            }
-
-            $user = \App\Models\User::getByLogin($data['email']);
-
-            if (Hash::generate($data['password'], $user['salt']) !== $user['password']) {
-                return false;
-            }
-
-            // TODO: Create a remember me cookie if the user has selected the option
-            // to remained logged in on the login form.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
-
-            $_SESSION['user'] = array(
-                'id' => $user['id'],
-                'username' => $user['username'],
-            );
-
-            return true;
-
-        } catch (Exception $ex) {
-            // TODO : Set flash if error
-            /* Utility\Flash::danger($ex->getMessage());*/
-        }
-    }
 
     /**
      * Logout: Delete cookie and session. Returns true if everything is okay,
