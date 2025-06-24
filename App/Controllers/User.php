@@ -133,7 +133,6 @@ class User extends \Core\Controller
         }
     }
 
-
     /**
      * Affiche la page du compte
      */
@@ -145,7 +144,6 @@ class User extends \Core\Controller
             'articles' => $articles
         ]);
     }
-
 
     /**
      * Logout: Delete cookie and session. Returns true if everything is okay,
@@ -215,5 +213,4 @@ class User extends \Core\Controller
             exit;
         }
     }
-
 }
