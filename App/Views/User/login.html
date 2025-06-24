@@ -3,63 +3,112 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-<div class="container-fluid bg-image">
-    <div class="row">
-        <div class="login-wraper">
-            <div class="hidden-xs">
-                <img src="images/login.jpg" alt="">
-            </div>
-            <div class="banner-text hidden-xs">
-                <div class="line"></div>
-                <div class="b-text">
-                    Des <span class="color-active">centaines<br> </span> <span class="color-b1">d'articles vous
-                </span>attendent
-                </div>
-            </div>
-            <div class="login-window">
-                <div class="l-head">
-                    Connexion
-                </div>
-                <div class="l-form">
-                    <form action="" method="post">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Email</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" name="email"
-                                   placeholder="sample@gmail.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Password</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1"
-                                   name="password" placeholder="**********">
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <label class="checkbox">
-                                    <input type="checkbox" name="remember">
-                                    <span class="arrow"></span>
-                                </label> <span>Se souvenir de moi</span>
-                                <span class="text2">(non recommandé si vous êtes sur un ordinateur partagé)</span>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <div
-                                    class="col-lg-7"><button type="submit" name="submit" class="btn btn-cv1">Connexion
-                                </button></div>
-                            <div class="hidden-xs">
-                                <div class="col-lg-1 ortext">or</div>
-                                <div class="col-lg-4 signuptext"><a href="register">Inscription</a></div>
-                            </div>
-                        </div>
-                        <div class="row hidden-xs">
-                            <div class="col-lg-12 forgottext">
-                                <a href="#">Mot de passe oublié ?</a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
+<style>
+  @media (min-width: 768px) {
+    .login-wrapper {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    .login-wrapper .image-col {
+      flex: 1;
+      display: block;
+      background: url('/images/login.jpg') center/cover no-repeat;
+      min-height: 100%;
+      position: relative;
+    }
+
+    .login-wrapper .form-col {
+      flex: 1;
+      padding: 3rem;
+    }
+
+    .banner-text {
+      position: absolute;
+      top: 20%;
+      left: 10%;
+      z-index: 2;
+      color: white;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .login-wrapper {
+      display: block;
+      box-shadow: none;
+      border-radius: 0;
+    }
+
+    .image-col {
+      display: none !important;
+    }
+
+    .form-col {
+      padding: 2rem 1rem;
+    }
+
+    .btn-cv1 {
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="container-fluid bg-image py-5">
+  <div class="login-wrapper">
+
+    <!-- Image (cachée sur mobile) -->
+    <div class="image-col d-none d-md-block">
+      <div class="banner-text">
+        <div class="line mb-2"></div>
+        <h4 class="b-text">
+          Des <span class="color-active">centaines<br></span>
+          <span class="color-b1">d'articles vous</span> attendent
+        </h4>
+      </div>
+    </div>
+
+    <!-- Formulaire -->
+    <div class="form-col">
+      <h3 class="mb-4 text-center">Connexion</h3>
+
+      <form action="" method="post">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="sample@gmail.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="**********" required>
+          </div>
+
+          <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="remember" name="remember">
+            <label class="form-check-label" for="remember">
+              Se souvenir de moi
+            </label>
+            <div class="small text-muted">
+              (non recommandé si vous êtes sur un ordinateur partagé)
+            </div>
+          </div>
+
+          <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-3">
+            <button type="submit" name="submit" class="btn btn-cv1 mb-2 mb-md-0">Connexion</button>
+            <span class="mx-md-3 d-none d-md-block">ou</span>
+            <a href="/register" class="btn btn-link">Inscription</a>
+          </div>
+
+          <div class="text-center">
+            <a href="#" class="text-muted">Mot de passe oublié ?</a>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
 {% endblock %}
