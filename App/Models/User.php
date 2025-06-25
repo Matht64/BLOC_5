@@ -58,7 +58,7 @@ class User extends Model {
 
         $stmt = $db->prepare('SELECT * FROM articles WHERE articles.id = ? LIMIT 1');
 
-        $stmt->execute([$id]);
+        $stmt->execute();
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
