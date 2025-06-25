@@ -126,7 +126,6 @@ class Articles extends Model {
     public static function save($data) {
         $db = static::getDB();
 
-        var_dump($data);
 
         $stmt = $db->prepare('INSERT INTO articles(name, description, user_id, published_date) VALUES (:name, :description, :user_id,:published_date)');
 
