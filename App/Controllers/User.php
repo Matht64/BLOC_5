@@ -22,7 +22,7 @@ class User extends \Core\Controller
      */
     public function loginAction()
     {
-        if (isset($_POST['submit'])) {
+        if(isset($_POST['submit'])){
             $f = $_POST;
 
             // D: Validation
@@ -35,6 +35,7 @@ class User extends \Core\Controller
 
         View::renderTemplate('User/login.html');
     }
+
     private function login($data)
     {
         try {
@@ -49,7 +50,6 @@ class User extends \Core\Controller
             }
 
             $hashed = Hash::generate($data['password'], $user['salt']);
-            echo "Hash généré : $hashed<br>";
 
             if ($hashed !== $user['password']) {
                 return false;
@@ -68,13 +68,12 @@ class User extends \Core\Controller
         }
     }
 
-    
     /**
      * Page de création de compte
      */
     public function registerAction()
     {
-        if (isset($_POST['submit'])) {
+        if(isset($_POST['submit'])){
             $f = $_POST;
 
             // validation
@@ -85,12 +84,23 @@ class User extends \Core\Controller
                 header('Location: /');
                 // DONE: Gestion d'erreur côté utilisateur
             }
-            throw new Exception('Les mots de passe ne correspondent pas.');          
+            throw new Exception('Les mots de passe ne correspondent pas.');
         }
 
         View::renderTemplate('User/register.html');
     }
 
+    /**
+     * Affiche la page du compte
+     */
+    public function accountAction()
+    {
+        $articles = Articles::getByUser($_SESSION['user']['id']);
+
+        View::renderTemplate('User/account.html', [
+            'articles' => $articles
+        ]);
+    }
 
     /*
      * Fonction privée pour enregister un utilisateur
@@ -117,20 +127,6 @@ class User extends \Core\Controller
         }
     }
 
-
-    /**
-     * Affiche la page du compte
-     */
-    public function accountAction()
-    {
-        $articles = Articles::getByUser($_SESSION['user']['id']);
-
-        View::renderTemplate('User/account.html', [
-            'articles' => $articles
-        ]);
-    }
-
-
     /**
      * Logout: Delete cookie and session. Returns true if everything is okay,
      * otherwise turns false.
@@ -138,8 +134,7 @@ class User extends \Core\Controller
      * @return boolean
      * @since 1.0.2
      */
-    public function logoutAction()
-    {
+    public function logoutAction() {
 
         /*
         if (isset($_COOKIE[$cookie])){
@@ -152,14 +147,9 @@ class User extends \Core\Controller
 
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
-            setcookie(
-                session_name(),
-                null,
-                time() - 42000,
-                $params["path"],
-                $params["domain"],
-                $params["secure"],
-                $params["httponly"]
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
             );
         }
 
@@ -199,5 +189,4 @@ class User extends \Core\Controller
             exit;
         }
     }
-
 }
