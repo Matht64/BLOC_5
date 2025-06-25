@@ -32,7 +32,8 @@ class User extends Model {
     }
 
     public static function getByLogin($login)
-    {
+    {   
+        echo "\nDB called \n";
         $db = static::getDB();
 
         $stmt = $db->prepare("
@@ -57,10 +58,15 @@ class User extends Model {
 
         $stmt = $db->prepare('SELECT * FROM articles WHERE articles.id = ? LIMIT 1');
 
-        $stmt->execute([$id]);
+        $stmt->execute();
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function countAll(): int {
+        $db = static::getDB();
+        $stmt = $db->query("SELECT COUNT(*) FROM users");
+        return $stmt->fetchColumn();
+    }
 
 }

@@ -6,7 +6,6 @@ use App\Config;
 use App\Model\UserRegister;
 use App\Models\Articles;
 use App\Utility\Hash;
-use App\Utility\Session;
 use \Core\View;
 use Exception;
 use http\Env\Request;
@@ -26,12 +25,12 @@ class User extends \Core\Controller
         if(isset($_POST['submit'])){
             $f = $_POST;
 
-            // TODO: Validation
-
-            $this->login($f);
-
+            // D: Validation
+            if ($this->login($f)){
+                header('Location: /account');
+            }
             // Si login OK, redirige vers le compte
-            header('Location: /account');
+            
         }
 
         View::renderTemplate('User/login.html');
@@ -40,23 +39,19 @@ class User extends \Core\Controller
     private function login($data)
     {
         try {
-
             if (!isset($data['email']) || !isset($data['password'])) {
-                echo "Champs manquants<br>";
                 return false;
             }
 
             $user = \App\Models\User::getByLogin($data['email']);
 
             if (!$user) {
-                echo "Utilisateur non trouvé<br>";
                 return false;
             }
 
             $hashed = Hash::generate($data['password'], $user['salt']);
 
             if ($hashed !== $user['password']) {
-                echo "Mot de passe incorrect<br>";
                 return false;
             }
 
@@ -66,12 +61,10 @@ class User extends \Core\Controller
                 'is_admin' => $user['is_admin'],
             ];
 
-            echo "</pre>";
             return true;
 
         } catch (Exception $ex) {
             echo "Exception : " . $ex->getMessage();
-            return false;
         }
     }
 
