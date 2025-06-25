@@ -22,12 +22,19 @@ abstract class Model
         static $db = null;
         
         if ($db === null) {
-            $dsn = 'mysql:host=' . getenv('DATABASE_HOST') . ';dbname=' . getenv('DATABASE_NAME') . ';charset=utf8';
-            $db = new PDO($dsn, getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
+            $dsn = 'mysql:host=localhost;dbname=videgrenierenligne;charset=utf8';
+            $db = new PDO($dsn, "root", '');
 
             // Throw an Exception when an error occurs
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
+        // if ($db === null) {
+        //     $dsn = 'mysql:host=' . getenv('DATABASE_HOST') . ';dbname=' . getenv('DATABASE_NAME') . ';charset=utf8';
+        //     $db = new PDO($dsn, getenv('DATABASE_USER'), getenv('DATABASE_PASSWORD'));
+
+        //     // Throw an Exception when an error occurs
+        //     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // }
 
         return $db;
     }
