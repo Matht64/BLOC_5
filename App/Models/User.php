@@ -63,5 +63,10 @@ class User extends Model {
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function countAll(): int {
+        $db = static::getDB();
+        $stmt = $db->query("SELECT COUNT(*) FROM users");
+        return $stmt->fetchColumn();
+    }
 
 }
